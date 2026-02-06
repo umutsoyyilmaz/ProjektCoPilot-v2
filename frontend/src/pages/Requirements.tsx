@@ -198,20 +198,13 @@ export default function Requirements() {
         throw new Error('Conversion failed')
       }
 
-      const data = await response.json().catch(() => null)
-      if (data) {
-        setEditingRequirement(data)
-        setFormData((prev) => ({
-          ...prev,
-          classification: data.classification ?? prev.classification,
-          status: data.status ?? prev.status,
-        }))
-      } else {
-        setEditingRequirement({
-          ...editingRequirement,
-          conversion_status: 'converted',
-        })
-      }
+      const data = await response.json()
+      alert(`Converted to ${data.conversion_type}! Created item ID: ${data.created_item_id}`)
+      setEditingRequirement((prev) => ({
+        ...prev,
+        ...data,
+        conversion_status: 'converted',
+      }))
       setConversionMessage('Converted successfully')
       await fetchRequirements()
     } catch {
@@ -268,7 +261,9 @@ export default function Requirements() {
   ]
 
   const isConverted = editingRequirement?.conversion_status === 'converted'
-  const canConvert = !isConverted && Boolean(editingRequirement?.classification)
+  const canConvert =
+    !isConverted &&
+    ['Fit', 'Gap', 'Partial Fit'].includes(editingRequirement?.classification ?? '')
 
   return (
     <div className="space-y-6">
@@ -408,10 +403,10 @@ export default function Requirements() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm font-medium text-gray-700">Conversion</div>
                 {isConverted ? (
-                  <div className="text-sm font-semibold text-green-600">
-                    Converted to {editingRequirement.conversion_type ?? 'item'} (ID:{' '}
-                    {editingRequirement.conversion_id ?? 'N/A'})
-                  </div>
+                  <Badge
+                    text={`✅ Converted to ${editingRequirement.conversion_type ?? 'item'}`}
+                    variant="success"
+                  />
                 ) : (
                   <Button
                     size="sm"
