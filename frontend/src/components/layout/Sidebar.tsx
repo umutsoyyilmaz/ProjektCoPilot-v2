@@ -12,14 +12,7 @@ import {
   TestTube,
   Wrench,
 } from 'lucide-react'
-import useAppStore from '../../store'
-import type { Project } from '../../types'
-
-const projectOptions: Project[] = [
-  { id: 'sap-core', name: 'S/4HANA Core' },
-  { id: 'sap-greenfield', name: 'S/4HANA Greenfield' },
-  { id: 'sap-rollout', name: 'Global Rollout' },
-]
+import { useAppStore } from '../../store'
 
 const navItems = [
   { label: 'Cockpit', icon: LayoutDashboard, path: '/' },
@@ -45,20 +38,12 @@ export default function Sidebar() {
   const location = useLocation()
   const [testsOpen, setTestsOpen] = useState(false)
   const sidebarOpen = useAppStore((state) => state.sidebarOpen)
-  const selectedProjectId = useAppStore((state) => state.selectedProjectId)
-  const setSelectedProject = useAppStore((state) => state.setSelectedProject)
 
   useEffect(() => {
     if (location.pathname.startsWith('/tests')) {
       setTestsOpen(true)
     }
   }, [location.pathname])
-
-  useEffect(() => {
-    if (!selectedProjectId && projectOptions.length > 0) {
-      setSelectedProject(projectOptions[0])
-    }
-  }, [selectedProjectId, setSelectedProject])
 
   const activeItemClass = `${baseItem} bg-sidebar-active text-white border-primary`
   const inactiveItemClass = `${baseItem} text-gray-300 hover:bg-sidebar-hover hover:text-white`
@@ -91,19 +76,10 @@ export default function Sidebar() {
           <select
             className="mt-1 w-full rounded-lg border border-sidebar-border bg-sidebar-hover px-3 py-2 text-sm text-white outline-none"
             id="project-select"
-            onChange={(event) => {
-              const project = projectOptions.find(
-                (item) => item.id === event.target.value,
-              )
-              setSelectedProject(project ?? null)
-            }}
-            value={selectedProjectId ?? projectOptions[0]?.id}
+            onChange={() => {}}
+            value="all"
           >
-            {projectOptions.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.name}
-              </option>
-            ))}
+            <option value="all">All Projects</option>
           </select>
         </div>
       </div>

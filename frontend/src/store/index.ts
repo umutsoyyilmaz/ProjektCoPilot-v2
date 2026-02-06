@@ -1,27 +1,15 @@
-import { create } from 'zustand'
-import type { Project } from '../types'
+import { create } from "zustand";
 
 interface AppState {
-  selectedProjectId: string | null
-  selectedProject: Project | null
-  sidebarOpen: boolean
-  setSelectedProject: (project: Project | null) => void
-  toggleSidebar: () => void
+  selectedProjectId: number | null;
+  sidebarOpen: boolean;
+  setSelectedProjectId: (id: number | null) => void;
+  toggleSidebar: () => void;
 }
 
-const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>((set) => ({
   selectedProjectId: null,
-  selectedProject: null,
   sidebarOpen: true,
-  setSelectedProject: (project) =>
-    set({
-      selectedProject,
-      selectedProjectId: project?.id ?? null,
-    }),
-  toggleSidebar: () =>
-    set((state) => ({
-      sidebarOpen: !state.sidebarOpen,
-    })),
-}))
-
-export default useAppStore
+  setSelectedProjectId: (id) => set({ selectedProjectId: id }),
+  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+}));

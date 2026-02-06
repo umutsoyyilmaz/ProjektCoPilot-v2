@@ -1,14 +1,15 @@
+import { useEffect, useState } from 'react'
 import { Clock } from 'lucide-react'
 
-const stats = [
-  { label: 'Projects', value: '—', color: 'text-blue-600', bg: 'bg-blue-50' },
-  { label: 'Scenarios', value: '—', color: 'text-green-600', bg: 'bg-green-50' },
-  { label: 'Requirements', value: '—', color: 'text-purple-600', bg: 'bg-purple-50' },
-  { label: 'Open Gaps', value: '—', color: 'text-red-600', bg: 'bg-red-50' },
-  { label: 'WRICEF Items', value: '—', color: 'text-orange-600', bg: 'bg-orange-50' },
-  { label: 'Config Items', value: '—', color: 'text-teal-600', bg: 'bg-teal-50' },
-  { label: 'Test Cases', value: '—', color: 'text-indigo-600', bg: 'bg-indigo-50' },
-]
+interface DashboardStats {
+  projects: number
+  scenarios: number
+  requirements: number
+  open_gaps: number
+  wricef_items: number
+  config_items: number
+  test_cases: number
+}
 
 const recentActivity = [
   {
@@ -36,11 +37,90 @@ function getGreeting() {
 }
 
 export default function Dashboard() {
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+
+    fetch('/api/v1/dashboard/stats')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Stats fetch failed')
+        }
+        return res.json()
+      })
+      .then((data: DashboardStats) => {
+        if (!isMounted) return
+        setStats(data)
+        setHasError(false)
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setHasError(true)
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   const today = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
   })
+
+  const resolveValue = (value?: number) => {
+    if (hasError) return '—'
+    if (!stats) return '...'
+    return value ?? '—'
+  }
+
+  const statCards = [
+    {
+      label: 'Projects',
+      value: resolveValue(stats?.projects),
+      color: 'text-blue-600',
+      bg: 'bg-blue-50',
+    },
+    {
+      label: 'Scenarios',
+      value: resolveValue(stats?.scenarios),
+      color: 'text-green-600',
+      bg: 'bg-green-50',
+    },
+    {
+      label: 'Requirements',
+      value: resolveValue(stats?.requirements),
+      color: 'text-purple-600',
+      bg: 'bg-purple-50',
+    },
+    {
+      label: 'Open Gaps',
+      value: resolveValue(stats?.open_gaps),
+      color: 'text-red-600',
+      bg: 'bg-red-50',
+    },
+    {
+      label: 'WRICEF Items',
+      value: resolveValue(stats?.wricef_items),
+      color: 'text-orange-600',
+      bg: 'bg-orange-50',
+    },
+    {
+      label: 'Config Items',
+      value: resolveValue(stats?.config_items),
+      color: 'text-teal-600',
+      bg: 'bg-teal-50',
+    },
+    {
+      label: 'Test Cases',
+      value: resolveValue(stats?.test_cases),
+      color: 'text-indigo-600',
+      bg: 'bg-indigo-50',
+    },
+  ]
 
   return (
     <div className="space-y-6">
@@ -60,7 +140,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat) => (
+        {statCards.map((stat) => (
           <div
             key={stat.label}
             className="rounded-xl bg-white p-5 shadow-sm transition hover:shadow-md"
