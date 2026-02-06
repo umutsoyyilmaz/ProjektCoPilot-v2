@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     DATABASE_PATH: Path = Path(
         os.environ.get(
             "DATABASE_PATH",
-            "/workspaces/ProjektCoPilot/project_copilot.db"
+            "/workspaces/ProjektCoPilot-v2/backend/project_copilot.db"
         )
     )
 
