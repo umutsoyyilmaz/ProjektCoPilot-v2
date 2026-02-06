@@ -25,7 +25,9 @@ def get_dashboard_stats(project_id: int | None = None, db: Session = Depends(get
         "projects": count(Project),
         "scenarios": count(Scenario),
         "requirements": count(Requirement),
-        "open_gaps": count(Requirement, Requirement.classification.in_(["Gap", "Partial Fit"])),
+        "open_gaps": db.query(Requirement)
+        .filter(Requirement.classification.in_(["Gap", "Partial Fit"]))
+        .count(),
         "wricef_items": count(WricefItem),
         "config_items": count(ConfigItem),
         "test_cases": count(TestManagement),
