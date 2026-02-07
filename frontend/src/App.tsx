@@ -4,6 +4,7 @@ import Layout from './components/layout/Layout'
 import Dashboard from './pages/Dashboard'
 import Projects from './pages/Projects'
 import Scenarios from './pages/Scenarios'
+import Analysis from './pages/Analysis'
 import Requirements from './pages/Requirements'
 import WricefItems from './pages/WricefItems'
 import ConfigItems from './pages/ConfigItems'
@@ -28,6 +29,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/scenarios" element={<Scenarios />} />
+            <Route path="/analysis" element={<Analysis />} />
             <Route path="/requirements" element={<Requirements />} />
             <Route path="/wricef" element={<WricefItems />} />
             <Route path="/config" element={<ConfigItems />} />
