@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import Projects from './pages/Projects'
 import Scenarios from './pages/Scenarios'
 import Analysis from './pages/Analysis'
+import SessionDetail from './pages/SessionDetail'
 import Requirements from './pages/Requirements'
 import WricefItems from './pages/WricefItems'
 import ConfigItems from './pages/ConfigItems'
@@ -30,6 +31,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/scenarios" element={<Scenarios />} />
             <Route path="/analysis" element={<Analysis />} />
+            <Route path="/sessions/:id" element={<SessionDetail />} />
             <Route path="/requirements" element={<Requirements />} />
             <Route path="/wricef" element={<WricefItems />} />
             <Route path="/config" element={<ConfigItems />} />
